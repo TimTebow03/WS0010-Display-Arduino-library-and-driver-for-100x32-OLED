@@ -79,4 +79,6 @@ void loop() {
   // put your main code here, to run repeatedly:
   display.showPic(picture5, 100);
   delay(1500);
+  display.clearDisplay();
+  delay(1500);
 }

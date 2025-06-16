@@ -37,10 +37,8 @@ private:
     void _setDataBusMode(uint8_t mode);
     void _writeDataBus(byte data);
     void _checkBusy();
-
     void _writeCommand(byte cmd);
     void _writeData(byte data);
-
     void _selectController(int x_coord);
 };
 
