@@ -81,19 +81,19 @@ void WS0010_Display::init()
 
 void WS0010_Display::begin()
 {
-    _writeCommand(0x38);
-    _writeCommand(0x38);
-    _writeCommand(0x38); // Function set (Graphics On selection needs this repeated sometimes)
-    _writeCommand(0x08); // Display OFF
-    _writeCommand(0x06); // Entry Mode Set (Increment cursor, no display shift)
+    _writeCommand(FUNCTION_SET);
+    _writeCommand(FUNCTION_SET);
+    _writeCommand(FUNCTION_SET); // Function set (Graphics On selection needs this repeated sometimes)
+    _writeCommand(SWITCH_DISPLAY_OFF); // Display OFF
+    _writeCommand(ENTRY_MODE_SET); // Entry Mode Set (Increment cursor, no display shift)
     // Graphic Mode Enable (Extended Instruction Set must be selected first usually)
     // Let's assume 0x38 was enough based on original code.
-    _writeCommand(0x1F); // Set Graphic Mode (Value specific to S0010? Check datasheet if issues)
+    _writeCommand(SET_GRAPHICS_MODE); // Set Graphic Mode (Value specific to S0010? Check datasheet if issues)
                         // Often needs Function Set with RE=1 first, but original didn't show that.
-    _writeCommand(0x01); // Clear Display THIS SEEMS TO DO NOTHING
+    _writeCommand(CLEAR_DISPLAY); // Clear Display THIS SEEMS TO DO NOTHING
     delay(10);          // Clear display takes longer
-    _writeCommand(0x02); // Return Home THIS SEEMS TO DO NOTHING
-    _writeCommand(0x0C); // Display ON
+    _writeCommand(RETURN_HOME); // Return Home THIS SEEMS TO DO NOTHING
+    _writeCommand(SWITCH_DISPLAY_ON); // Display ON
 
     digitalWrite(_cs1_pin, HIGH); // Deselect chips
     digitalWrite(_cs2_pin, HIGH);
@@ -102,7 +102,29 @@ void WS0010_Display::begin()
 
 void WS0010_Display::clearDisplay()
 {
-    _writeCommand(0x01);
+    digitalWrite(_cs1_pin, LOW);
+    digitalWrite(_cs2_pin, LOW);
+    _writeCommand(CLEAR_DISPLAY);
+    digitalWrite(_cs1_pin, HIGH);
+    digitalWrite(_cs2_pin, HIGH);
+}
+
+void WS0010_Display::switchDisplayOn()
+{
+    digitalWrite(_cs1_pin, LOW);
+    digitalWrite(_cs2_pin, LOW);
+    _writeCommand(SWITCH_DISPLAY_ON);
+    digitalWrite(_cs1_pin, HIGH);
+    digitalWrite(_cs2_pin, HIGH);
+}
+
+void WS0010_Display::switchDisplayOff()
+{
+    digitalWrite(_cs1_pin, LOW);
+    digitalWrite(_cs2_pin, LOW);
+    _writeCommand(SWITCH_DISPLAY_OFF);
+    digitalWrite(_cs1_pin, HIGH);
+    digitalWrite(_cs2_pin, HIGH);
 }
 
 void WS0010_Display::_writeCommand(byte cmd)
