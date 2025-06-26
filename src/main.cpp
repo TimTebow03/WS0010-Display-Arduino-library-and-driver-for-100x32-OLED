@@ -2,16 +2,16 @@
 #include <avr/pgmspace.h>
 #include <WS0010_WEG010032.h>
 
-// --- Pin Definitions ---
+// Pins
 // Data Bus (Using D2-D9 for DB0-DB7)
 const uint8_t DB_PINS[] = {2, 3, 4, 5, 6, 7, 8, 9}; // DB0=D2, DB1=D3 ... DB7=D9
-const uint8_t BUSY_PIN = 9;                         // D9 (DB7) is also used for Busy Flag input
+const uint8_t BUSY_PIN = 9;                         // D9 (DB7) is also the Busy Flag
 
 // Control Pins
 const uint8_t RS_PIN = 10;
 const uint8_t RW_PIN = 11;
 const uint8_t E_PIN = 12;
-const uint8_t CS1_PIN = A0; // Use analog pins as digital
+const uint8_t CS1_PIN = A0;
 const uint8_t CS2_PIN = A1;
 
 WS0010_Display display(DB_PINS,RS_PIN,RW_PIN,E_PIN,CS1_PIN,CS2_PIN,BUSY_PIN);
@@ -70,13 +70,11 @@ const unsigned char picture5[4][100] PROGMEM = {
 };
 
 void setup() {
-  // put your setup code here, to run once:
   display.init();
   display.begin();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   display.showPic(picture5, 100);
   delay(1500);
   display.clearDisplay();

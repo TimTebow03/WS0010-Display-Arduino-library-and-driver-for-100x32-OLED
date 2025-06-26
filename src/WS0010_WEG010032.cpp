@@ -14,46 +14,53 @@ void WS0010_Display::showPic(const unsigned char pic_data[][100], unsigned char 
     byte data_byte;
 
     // --- Chip 1 ---
-    digitalWrite(_cs2_pin, HIGH); // Disable chip 2
-    digitalWrite(_cs1_pin, LOW);  // Enable chip 1
+    // Disable chip 2 and enable chip 1
+    digitalWrite(_cs2_pin, HIGH);
+    digitalWrite(_cs1_pin, LOW);
 
-    // First line (Page 0?)
-    _writeCommand(SET_DDRAM_ADDR); // Set DDRAM address base (as per original)
-    _writeCommand(SET_Y_ADDR_0);   // Set Y address 0
+    // First line
+    // Set DDRAM address to 0 (base) amd Y address to 0
+    _writeCommand(SET_DDRAM_ADDR);
+    _writeCommand(SET_Y_ADDR_0);
     for (i = 0; i < size; i++) {
         data_byte = pgm_read_byte(&pic_data[0][i]);
         _writeData(data_byte);
     }
 
-    // Second line (Page 1?)
-    _writeCommand(SET_DDRAM_ADDR); // Set DDRAM address base
-    _writeCommand(SET_Y_ADDR_1);   // Set Y address 1
+    // Second line
+    // Set DDRAM address to 0 (base) amd Y address to 1
+    _writeCommand(SET_DDRAM_ADDR);
+    _writeCommand(SET_Y_ADDR_1);
     for (i = 0; i < size; i++) {
         data_byte = pgm_read_byte(&pic_data[1][i]);
         _writeData(data_byte);
     }
 
     // --- Chip 2 ---
-    digitalWrite(_cs1_pin, HIGH); // Disable chip 1
-    digitalWrite(_cs2_pin, LOW);  // Enable chip 2
+    // Disable chip 1 and enable chip 2
+    digitalWrite(_cs1_pin, HIGH);
+    digitalWrite(_cs2_pin, LOW);
 
-    // Third line (Page 0?)
-    _writeCommand(SET_DDRAM_ADDR); // Set DDRAM address base
-    _writeCommand(SET_Y_ADDR_0);   // Set Y address 0
+    // Third line
+    // Set DDRAM address to 0 (base) amd Y address to 0
+    _writeCommand(SET_DDRAM_ADDR);
+    _writeCommand(SET_Y_ADDR_0);
     for (i = 0; i < size; i++) {
         data_byte = pgm_read_byte(&pic_data[2][i]);
         _writeData(data_byte);
     }
 
-    // Fourth line (Page 1?)
-    _writeCommand(SET_DDRAM_ADDR); // Set DDRAM address base
-    _writeCommand(SET_Y_ADDR_1);   // Set Y address 1
+    // Fourth line
+    // Set DDRAM address to 0 (base) amd Y address to 1
+    _writeCommand(SET_DDRAM_ADDR);
+    _writeCommand(SET_Y_ADDR_1);
     for (i = 0; i < size; i++) {
         data_byte = pgm_read_byte(&pic_data[3][i]);
         _writeData(data_byte);
     }
 
-    digitalWrite(_cs2_pin, HIGH); // Disable chip 2
+    // Disable chip 2
+    digitalWrite(_cs2_pin, HIGH); 
 }
 
 
@@ -81,23 +88,20 @@ void WS0010_Display::init()
 
 void WS0010_Display::begin()
 {
-    _writeCommand(FUNCTION_SET);
-    _writeCommand(FUNCTION_SET);
-    _writeCommand(FUNCTION_SET); // Function set (Graphics On selection needs this repeated sometimes)
+    _writeCommand(FUNCTION_SET); // Function set (8-bit interface, basic instruction set)
+    _writeCommand(FUNCTION_SET); // Function set (8-bit interface, basic instruction set)
+    _writeCommand(FUNCTION_SET); // Function set (8-bit interface, basic instruction set)
     _writeCommand(SWITCH_DISPLAY_OFF); // Display OFF
     _writeCommand(ENTRY_MODE_SET); // Entry Mode Set (Increment cursor, no display shift)
-    // Graphic Mode Enable (Extended Instruction Set must be selected first usually)
-    // Let's assume 0x38 was enough based on original code.
-    _writeCommand(SET_GRAPHICS_MODE); // Set Graphic Mode (Value specific to S0010? Check datasheet if issues)
-                        // Often needs Function Set with RE=1 first, but original didn't show that.
-    _writeCommand(CLEAR_DISPLAY); // Clear Display THIS SEEMS TO DO NOTHING
-    delay(10);          // Clear display takes longer
-    _writeCommand(RETURN_HOME); // Return Home THIS SEEMS TO DO NOTHING
+    _writeCommand(SET_GRAPHICS_MODE); // Set Graphic Mode
+    _writeCommand(CLEAR_DISPLAY); // Clear Display *THIS SEEMS TO DO NOTHING*
+    delay(10); // this makes sure clear display finishes to my understanding
+    _writeCommand(RETURN_HOME); // Return Home *THIS SEEMS TO DO NOTHING*
     _writeCommand(SWITCH_DISPLAY_ON); // Display ON
 
     digitalWrite(_cs1_pin, HIGH); // Deselect chips
     digitalWrite(_cs2_pin, HIGH);
-    delay(20); // Delay after initialization
+    delay(20); // Delay after initialisation
 }
 
 void WS0010_Display::clearDisplay()
@@ -129,15 +133,17 @@ void WS0010_Display::switchDisplayOff()
 
 void WS0010_Display::_writeCommand(byte cmd)
 {
-    // Busy check should happen BEFORE sending the next command/data
-    // However, the original code checked *after* pulsing E. Let's stick to that for now.
-    // checkBusy(); // Check busy *before* sending? Typically yes. Let's test original way first.
+    /* write command is interesting but no issues yet,
+       the busy flag check happens at the end of the function
+       but it would make more sense for it to happen at the beginning?
+    */
+
     digitalWrite(_rs_pin, LOW); // Instruction mode
     digitalWrite(_rw_pin, LOW); // Write mode
-    _setDataBusMode(OUTPUT);    // Ensure data pins are output
+    _setDataBusMode(OUTPUT); // Ensure data pins are output
     _writeDataBus(cmd);
     _pulseEnable();
-    _checkBusy(); // Check busy *after* command sent (as per original)
+    _checkBusy();
 }
 
 void WS0010_Display::_setDataBusMode(uint8_t mode)
@@ -157,16 +163,16 @@ void WS0010_Display::_writeDataBus(byte data)
 void WS0010_Display::_pulseEnable()
 {
     digitalWrite(_e_pin, LOW);
-    delayMicroseconds(1); // Min E cycle time is ~1us, pulse width ~450ns
+    delayMicroseconds(1); // Wait (similar to _nop_)
     digitalWrite(_e_pin, HIGH);
-    delayMicroseconds(1); // E high needs to be > 450ns
+    delayMicroseconds(1); // Wait
     digitalWrite(_e_pin, LOW);
-    delayMicroseconds(1); // E low duration
+    delayMicroseconds(1); // Wait
 }
 
 void WS0010_Display::_checkBusy()
 {
-    pinMode(_busy_pin, INPUT); // Set D7/Busy pin to input
+    pinMode(_busy_pin, INPUT); // Set Busy pin to input
     digitalWrite(_rs_pin, LOW); // Instruction mode
     digitalWrite(_rw_pin, HIGH); // Read mode
 
@@ -174,33 +180,22 @@ void WS0010_Display::_checkBusy()
     do {
         // Pulse Enable to read the busy flag
         digitalWrite(_e_pin, HIGH);
-        delayMicroseconds(1); // Wait for data to be available
+        delayMicroseconds(1); // Wait (similar to _nop_)
         busy = digitalRead(_busy_pin); // Read the busy flag (D7)
         digitalWrite(_e_pin, LOW);
-        delayMicroseconds(1); // Add short delay between checks if needed
-
-        // The original code pulsed E repeatedly within the loop.
-        // Some controllers might require this to update the busy status output.
-        // If the above doesn't work, try pulsing within the loop again.
-        // Example alternative pulse inside loop:
-        // digitalWrite(E_PIN, HIGH); delayMicroseconds(1);
-        // busy = digitalRead(BUSY_PIN);
-        // digitalWrite(E_PIN, LOW); delayMicroseconds(1);
-
+        delayMicroseconds(1); // Wait (similar to _nop_)
     } while (busy);
 
     digitalWrite(_rw_pin, LOW); // Return to write mode
-    pinMode(_busy_pin, OUTPUT); // Set D7/Busy pin back to output
-    // Note: setDataBusMode(OUTPUT) is called implicitly by the next write operation
+    pinMode(_busy_pin, OUTPUT); // Set Busy pin back to output
 }
 
 void WS0010_Display::_writeData(byte data)
 {
-    // checkBusy(); // Check busy *before* sending? Typically yes. Let's test original way first.
     digitalWrite(_rs_pin, HIGH); // Data mode
     digitalWrite(_rw_pin, LOW);  // Write mode
-    _setDataBusMode(OUTPUT);     // Ensure data pins are output
+    _setDataBusMode(OUTPUT);
     _writeDataBus(data);
     _pulseEnable();
-    _checkBusy(); // Check busy *after* data sent (as per original)
+    _checkBusy();
 }
