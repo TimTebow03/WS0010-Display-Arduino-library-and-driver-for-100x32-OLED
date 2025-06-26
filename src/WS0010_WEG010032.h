@@ -15,7 +15,7 @@
 #define FUNCTION_SET 0x38
 
 // Entry Mode Set
-// 0 0 0 0 0 1 1(Increment DDRAM by 1 *n/a*) 0(Display Shift)
+// 0 0 0 0 0 1 1(Increment DDRAM by 1) 0(Display Shift)
 #define ENTRY_MODE_SET 0x06
 
 // Cursor/Display Shift Instruction

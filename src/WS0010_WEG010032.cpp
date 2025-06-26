@@ -19,7 +19,7 @@ void WS0010_Display::showPic(const unsigned char pic_data[][100], unsigned char 
     digitalWrite(_cs1_pin, LOW);
 
     // First line
-    // Set DDRAM address to 0 (base) amd Y address to 0
+    // Set DDRAM address to 0 (base) and Y address to 0
     _writeCommand(SET_DDRAM_ADDR);
     _writeCommand(SET_Y_ADDR_0);
     for (i = 0; i < size; i++) {
@@ -28,7 +28,7 @@ void WS0010_Display::showPic(const unsigned char pic_data[][100], unsigned char 
     }
 
     // Second line
-    // Set DDRAM address to 0 (base) amd Y address to 1
+    // Set DDRAM address to 0 (base) and Y address to 1
     _writeCommand(SET_DDRAM_ADDR);
     _writeCommand(SET_Y_ADDR_1);
     for (i = 0; i < size; i++) {
@@ -42,7 +42,7 @@ void WS0010_Display::showPic(const unsigned char pic_data[][100], unsigned char 
     digitalWrite(_cs2_pin, LOW);
 
     // Third line
-    // Set DDRAM address to 0 (base) amd Y address to 0
+    // Set DDRAM address to 0 (base) and Y address to 0
     _writeCommand(SET_DDRAM_ADDR);
     _writeCommand(SET_Y_ADDR_0);
     for (i = 0; i < size; i++) {
@@ -51,7 +51,7 @@ void WS0010_Display::showPic(const unsigned char pic_data[][100], unsigned char 
     }
 
     // Fourth line
-    // Set DDRAM address to 0 (base) amd Y address to 1
+    // Set DDRAM address to 0 (base) and Y address to 1
     _writeCommand(SET_DDRAM_ADDR);
     _writeCommand(SET_Y_ADDR_1);
     for (i = 0; i < size; i++) {
