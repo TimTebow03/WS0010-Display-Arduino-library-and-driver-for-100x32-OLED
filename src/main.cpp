@@ -181,12 +181,13 @@ void setup() {
 }
 
 void loop() {
+  // Hopefully this shows a small blinking animation of a Vaugh Bode character!
   display.showPic(charClosed, 100);
-  delay(50);
+  delay(150);
   display.showPic(charHalf, 100);
-  delay(100);
+  delay(80);
   display.showPic(charOpen, 100);
-  delay(4000);
+  delay(3500);
   display.showPic(charHalf, 100);
-  delay(100);
+  delay(80);
 }

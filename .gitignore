@@ -3,8 +3,3 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
-CodeAnalysis.pdf
-OLEDCodeBreakdown.pdf
-OledDriverFunctionReview.pdf
-S0010_10032_6800.c
-fromArduinoIDE.cpp
