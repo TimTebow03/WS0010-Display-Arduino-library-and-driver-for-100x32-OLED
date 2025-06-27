@@ -176,7 +176,6 @@ const unsigned char charHalf[4][100] PROGMEM = {
 };
 
 void setup() {
-  display.init();
   display.begin();
 }
 
