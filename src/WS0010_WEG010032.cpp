@@ -13,7 +13,7 @@ void WS0010_Display::showPic(const unsigned char pic_data[][100], unsigned char 
     unsigned char i;
     byte data_byte;
 
-    // --- Chip 1 ---
+    // Chip 1
     // Disable chip 2 and enable chip 1
     digitalWrite(_cs2_pin, HIGH);
     digitalWrite(_cs1_pin, LOW);
@@ -36,7 +36,7 @@ void WS0010_Display::showPic(const unsigned char pic_data[][100], unsigned char 
         _writeData(data_byte);
     }
 
-    // --- Chip 2 ---
+    // Chip 2
     // Disable chip 1 and enable chip 2
     digitalWrite(_cs1_pin, HIGH);
     digitalWrite(_cs2_pin, LOW);
