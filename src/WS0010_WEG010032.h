@@ -33,7 +33,6 @@ public:
                     uint8_t rw_pin, uint8_t e_pin, uint8_t cs1_pin, uint8_t cs2_pin, uint8_t busy_pin);
     
     void begin();
-    void init();
     void showPic(const unsigned char pic_data[][100], unsigned char size);
     void clearDisplay();
     void switchDisplayOn();
@@ -49,6 +48,7 @@ private:
     uint8_t _cs2_pin;
     uint8_t _busy_pin;
 
+    void _init();
     void _pulseEnable();
     void _setDataBusMode(uint8_t mode);
     void _writeDataBus(byte data);

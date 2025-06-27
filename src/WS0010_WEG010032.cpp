@@ -63,31 +63,16 @@ void WS0010_Display::showPic(const unsigned char pic_data[][100], unsigned char 
     digitalWrite(_cs2_pin, HIGH); 
 }
 
-
-void WS0010_Display::init()
+void WS0010_Display::begin()
 {
-    // Set control pins to output
-    pinMode(_rs_pin, OUTPUT);
-    pinMode(_rw_pin, OUTPUT);
-    pinMode(_e_pin, OUTPUT);
-    pinMode(_cs1_pin, OUTPUT);
-    pinMode(_cs2_pin, OUTPUT);
-
-    // Initial pin states
-    digitalWrite(_e_pin, LOW);
-    digitalWrite(_cs1_pin, HIGH); // Deselect initially
-    digitalWrite(_cs2_pin, HIGH); // Deselect initially
-    digitalWrite(_rw_pin, LOW);
-
-    delay(50); // Wait for OLED power-up
-
+    //initialise pins
+    _init();
+    
+    delay(50);
     // Select both chips for initial commands
     digitalWrite(_cs1_pin, LOW);
     digitalWrite(_cs2_pin, LOW);
-}
 
-void WS0010_Display::begin()
-{
     _writeCommand(FUNCTION_SET); // Function set (8-bit interface, basic instruction set)
     _writeCommand(FUNCTION_SET); // Function set (8-bit interface, basic instruction set)
     _writeCommand(FUNCTION_SET); // Function set (8-bit interface, basic instruction set)
@@ -129,6 +114,22 @@ void WS0010_Display::switchDisplayOff()
     _writeCommand(SWITCH_DISPLAY_OFF);
     digitalWrite(_cs1_pin, HIGH);
     digitalWrite(_cs2_pin, HIGH);
+}
+
+void WS0010_Display::_init()
+{
+    // Set control pins to output
+    pinMode(_rs_pin, OUTPUT);
+    pinMode(_rw_pin, OUTPUT);
+    pinMode(_e_pin, OUTPUT);
+    pinMode(_cs1_pin, OUTPUT);
+    pinMode(_cs2_pin, OUTPUT);
+
+    // Initial pin states
+    digitalWrite(_e_pin, LOW);
+    digitalWrite(_cs1_pin, HIGH); // Deselect initially
+    digitalWrite(_cs2_pin, HIGH); // Deselect initially
+    digitalWrite(_rw_pin, LOW);
 }
 
 void WS0010_Display::_writeCommand(byte cmd)
